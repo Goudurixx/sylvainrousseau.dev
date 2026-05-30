@@ -1,0 +1,48 @@
+# Self-hosting stack for sylvainrousseau.dev — static site only.
+#
+# Local/sandbox use (per plan-5 M1):
+#   npm run build && docker compose up
+#   -> http://localhost:8080
+#   (cloudflared will restart-loop without a real TUNNEL_TOKEN — harmless, caddy
+#    still serves the site. Run `docker compose up caddy` to skip it entirely.)
+#
+# NAS use (per plan-5 M2): same file, real token in .env, no host port needed
+# beyond what's already here (127.0.0.1-bound, not reachable from the LAN/WAN —
+# the tunnel is the only public path, see docs/deploy-runbook.md).
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: website-caddy
+    restart: unless-stopped
+    # Bound to loopback only: reachable for local testing / NAS-local checks,
+    # never exposed on the LAN interface or forwarded through the router.
+    ports:
+      - "127.0.0.1:${HOST_PORT:-8080}:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # dist/ is produced by `npm run build`; mounted read-only so the running
+      # container can never modify or write into the site content.
+      - ./dist:/srv/dist:ro
+    networks:
+      - site
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: website-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      # TODO (NAS only): set a real tunnel token in .env — see docs/deploy-runbook.md.
+      # Never commit a real token; .env is gitignored.
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-}
+    depends_on:
+      - caddy
+    networks:
+      - site
+    # No ports published: cloudflared only makes an outbound connection to the
+    # Cloudflare edge and reaches `caddy` over the internal `site` network.
+
+networks:
+  site:
+    driver: bridge

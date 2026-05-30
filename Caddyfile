@@ -1,0 +1,30 @@
+# Caddyfile — static-only, read-only site.
+# Caddy listens on :80 inside the container; cloudflared terminates TLS at the
+# Cloudflare edge and connects to this container over the private tunnel network.
+# No public port is published from this container on the host (see docker-compose.yml).
+
+:80 {
+	root * /srv/dist
+	file_server
+	encode gzip zstd
+
+	# Static site only — no PHP, no CGI, no reverse-proxying, no admin surface.
+
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# TODO: tighten CSP if/when any external resources (fonts, analytics) are added.
+		# Content-Security-Policy "default-src 'self'"
+	}
+
+	# TODO: add a real 404 page (e.g. src/pages/404.astro) and point it here once it exists.
+	handle_errors {
+		respond "{err.status_code} {err.status_text}"
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}
