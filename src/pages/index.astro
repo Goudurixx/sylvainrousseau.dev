@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const positioning =
+  'Software engineer, AI detection & counter-UAS systems — I build and integrate defense software and deploy it in the field (Ukraine, UAE, naval environments).';
+
+const headline =
+  'Software Engineer — AI Detection & Counter-UAS · Field-Deployed Defense Systems · Android · Embedded AI · C2/C2 integration';
+
+// NOTE: `period` is intentionally blank — dates are not confirmed. See <!-- TODO --> markers below.
+const workCards = [
+  {
+    org: 'Alta Ares',
+    role: 'Software Engineer — Counter-UAS Integration',
+    period: '',
+    bullets: [
+      'Integrated counter-UAS systems with allied C2 platforms (C2 ecosystem, C2 integration).',
+      'Field deployments across multiple countries, including active conflict zones and naval environments.',
+      'Video pipeline hardening, radar/RF sensor fusion, tactical data links.',
+    ],
+    tags: ['Counter-UAS', 'C2', 'C2 integration', 'RF/Radar', 'Defense'],
+  },
+  {
+    org: 'Netatmo',
+    role: 'Software Engineer — AI-Vision Security Cameras',
+    period: '',
+    bullets: [
+      'Built on-device AI detection for consumer security cameras (person / vehicle / animal recognition).',
+      'Real-time video pipeline and edge inference on embedded hardware.',
+    ],
+    tags: ['Computer Vision', 'Edge AI', 'Embedded'],
+  },
+  {
+    org: 'Allergenius',
+    role: 'Software Engineer — Embedded-AI Mobile App',
+    period: '',
+    bullets: [
+      'Embedded AI application for on-device ingredient/allergen detection.',
+      'Mobile computer vision pipeline on Android.',
+    ],
+    tags: ['Android', 'Kotlin', 'Computer Vision', 'Edge AI'],
+  },
+];
+
+// TODO: replace with real side projects (e.g. Plan 1 mini web GCS) once shipped, and link their repos
+const projectCards = [
+  {
+    name: 'Mini Web Ground Control Station',
+    description:
+      'MAVLink-based ground control station built on open tech, to show how the C2/MAVLink world works from the outside.',
+    href: '#', // TODO: link to real repo once published
+    status: 'planned',
+  },
+];
+
+// TODO: replace with real profile URLs before publishing
+const links = [
+  { label: 'GitHub', href: 'https://github.com/goudurixx' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/sylvain65' },
+  { label: 'Email', href: 'mailto:6sylvain5@gmail.com' },
+];
+---
+
+<BaseLayout
+  title="Home"
+  description="Software engineer working on AI detection and counter-UAS systems, field-deployed defense software, and embedded AI."
+>
+  <h1>Sylvain Rousseau</h1>
+  <p class="tagline">{headline}</p>
+  <p>{positioning}</p>
+
+  <!-- TODO: fill in real GitHub / LinkedIn / email hrefs above before publishing -->
+  <ul class="link-list">
+    {links.map((l) => (
+      <li><a href={l.href}>{l.label}</a></li>
+    ))}
+  </ul>
+
+  <h2>Experience</h2>
+  <!--
+    TODO: confirm exact employment dates/titles for all three roles before publishing.
+    TODO (Allergenius): verify the capability framing below against what was actually shipped.
+  -->
+  {workCards.map((w) => (
+    <div class="card">
+      <div class="card-meta">{w.org}{w.period ? ` · ${w.period}` : ''}</div>
+      <h3>{w.role}</h3>
+      <ul>
+        {w.bullets.map((b) => <li>{b}</li>)}
+      </ul>
+      <div class="tags">
+        {w.tags.map((t) => <span class="tag">{t}</span>)}
+      </div>
+    </div>
+  ))}
+
+  <h2>Side projects</h2>
+  {projectCards.map((p) => (
+    <div class="card">
+      <div class="card-meta">{p.status}</div>
+      <h3><a href={p.href}>{p.name}</a></h3>
+      <p>{p.description}</p>
+    </div>
+  ))}
+
+  <h2>Elsewhere</h2>
+  <p>
+    Read the <a href="/blog">blog</a> or grab the <a href="/cv">CV</a>.
+  </p>
+</BaseLayout>
