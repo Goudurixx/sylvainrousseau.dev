@@ -1,4 +1,4 @@
-# sylvainrousseau.dev
+# goudurixx.technology
 
 Static portfolio site (Astro), containerized behind Caddy + a Cloudflare Tunnel. No server-side
 logic, no database, no client-side JS beyond what Astro emits for markdown/CSS — static output

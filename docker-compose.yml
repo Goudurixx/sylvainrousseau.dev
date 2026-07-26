@@ -1,4 +1,4 @@
-# Self-hosting stack for sylvainrousseau.dev — static site only.
+# Self-hosting stack for goudurixx.technology — static site only.
 #
 # Local/sandbox use (per plan-5 M1):
 #   npm run build && docker compose up
