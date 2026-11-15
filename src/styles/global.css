@@ -90,7 +90,7 @@ main.narrow h2 { font-size: 1.6rem; margin-top: 1.8rem; }
   mask-image: linear-gradient(to top, black 10%, transparent 80%);
   opacity: 0.55;
 }
-.hero-copy { padding-bottom: clamp(3rem, 9vh, 6rem); display: grid; gap: 1.4rem; max-width: 52rem; }
+.hero-copy { padding-bottom: clamp(8rem, 14vh, 10rem); display: grid; gap: 1.4rem; max-width: 52rem; }
 .hero-copy .lede { font-size: clamp(1.05rem, 2vw, 1.3rem); color: #c4cedb; max-width: 40rem; }
 .hero-copy .lede b { color: var(--ink); font-weight: 500; }
 .status-strip { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; font: 400 0.8rem/1.4 var(--mono); color: var(--dim); }
@@ -259,3 +259,9 @@ main.narrow h2 { font-size: 1.6rem; margin-top: 1.8rem; }
 .role-photo { margin: 0.6rem 0 0; display: grid; gap: 0.5rem; }
 .role-photo img { width: 100%; max-width: 40rem; border-radius: 12px; border: 1px solid var(--line); display: block; }
 .role-photo figcaption { font: 400 0.78rem/1.4 var(--mono); color: var(--dim); }
+
+/* hero bottom: content fades into the page instead of being cut by the section edge */
+.hero::after {
+  content: ''; position: absolute; inset: auto 0 0 0; height: 9rem; z-index: 2; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--bg) 85%);
+}

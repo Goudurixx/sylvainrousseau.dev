@@ -257,6 +257,7 @@ const [current, ...past] = roles;
           const r = el.getBoundingClientRect();
           // hero layers follow page scroll; others drift around the viewport centre
           const off = el.closest('.hero') ? -scrollY * d : (r.top + r.height / 2 - innerHeight / 2) * d;
+          if (el.classList.contains('hero-copy')) el.style.opacity = String(Math.max(0, 1 - scrollY / (innerHeight * 0.55)));
           el.style.transform = el.classList.contains('grid-floor')
             ? `perspective(600px) rotateX(62deg) translateY(${(-scrollY * d).toFixed(1)}px)`
             : `translate3d(0, ${off.toFixed(1)}px, 0)`;
