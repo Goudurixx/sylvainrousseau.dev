@@ -265,3 +265,7 @@ main.narrow h2 { font-size: 1.6rem; margin-top: 1.8rem; }
   content: ''; position: absolute; inset: auto 0 0 0; height: 9rem; z-index: 2; pointer-events: none;
   background: linear-gradient(to bottom, transparent, var(--bg) 85%);
 }
+
+.prose img { max-width: 100%; border-radius: 12px; border: 1px solid var(--line); }
+.prose h2 { font-size: 1.5rem; margin-top: 1.4rem; }
+.prose ul { padding-left: 1.2rem; display: grid; gap: .4rem; }

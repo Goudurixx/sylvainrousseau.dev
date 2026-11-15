@@ -27,13 +27,13 @@ export const roles: Role[] = [
     highlights: [
       'Lead a cross-functional team of 6 across architecture, delivery and production.',
       'Own the Ground Control Station from R&D to production: technical direction, onboarding, acting production lead.',
-      'Designed and shipped 3 C2 integration bridges from scratch in 5 months (a C2 system, a C2 system, a C2 system), each against a live customer demo.',
-      'Hardened the vision-tracking and guidance stack for field use: TensorRT/CUDA inference on Jetson Orin, hardware-rooted device identity, remote access to deployed sites.',
-      'Partner programs: strike-drone integration, a higher-capacity airframe with GNSS-denied navigation, radar in the detection pipeline.',
+      'Designed and shipped 3 C2 integration bridges from scratch in 5 months, each against a live customer demo.',
+      'Hardened the vision-tracking and guidance stack for field use: TensorRT/CUDA inference on Jetson Orin and edge AI on Raspberry Pi, hardware-rooted device identity, remote access to deployed sites.',
+      'Partner programs: strike-drone integration, a higher-capacity airframe with GNSS-denied navigation, radar integration in the detection pipeline.',
       'In-house antenna project, a technician-facing production QA tool, and an LLM support agent grounded in real field incidents.',
       '~5 months embedded on customer and government sites in Ukraine, the UAE and France.',
     ],
-    stack: ['Python', 'C/C++', 'Jetson Orin', 'TensorRT', 'MAVLink', 'ArduPilot', 'C2 integration', 'CoT/C2', 'RF'],
+    stack: ['Python', 'C/C++', 'Jetson Orin', 'Raspberry Pi', 'TensorRT', 'MAVLink', 'ArduPilot', 'C2 integration', 'RF'],
   },
   {
     org: 'Netatmo · Legrand group',
@@ -46,7 +46,8 @@ export const roles: Role[] = [
       'Shipped a new product integration, extending real-time intrusion and event detection to a new device line.',
       'Integrated AI vision recognition (person / vehicle / animal) into real-time camera alerts.',
       'Cut calls to the security-events API by 30%.',
-      'Owned the shared design system across 4 brands (Netatmo, Legrand, Intuis, Velux); migrated Velux from XML to Compose; built a Gradle plugin that automates releases.',
+      'Led the full Jetpack Compose rebuild of the VELUX ACTIVE app, migrating it entirely from XML views.',
+      'Owned the shared design system across 4 brands (Netatmo, Legrand, Intuis, Velux); built a Gradle plugin that automates releases.',
     ],
     stack: ['Kotlin', 'Compose', 'Coroutines/Flow', 'MVVM', 'BLE', 'Bonjour', 'Firebase'],
   },
@@ -118,7 +119,7 @@ export const education = [
 
 export const skills: Record<string, string[]> = {
   'Embedded & edge AI': ['Embedded Linux (secure boot)', 'Jetson Orin · TensorRT · CUDA', 'Axelera Metis', 'Raspberry Pi', 'YOLO', 'On-device vision & OCR', 'vLLM / LLM agents'],
-  'Drones, C2 & networks': ['MAVLink', 'ArduPilot', 'pymavlink', 'C2 integration', 'a C2 system', 'a C2 system', 'radar', 'RF links & antennas', 'Tailscale'],
+  'Drones, C2 & networks': ['MAVLink', 'ArduPilot', 'pymavlink', 'C2 integration bridges', 'Radar & sensor integration', 'RF links & antennas', 'Tailscale'],
   Mobile: ['Android', 'Jetpack Compose', 'Coroutines / Flow', 'Clean Architecture', 'Gradle plugins', 'CameraX', 'BLE / IoT'],
   Languages: ['Kotlin', 'Python', 'C/C++', 'SQL', 'Java', 'Dart', 'Swift'],
 };
