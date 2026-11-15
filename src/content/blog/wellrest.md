@@ -2,6 +2,7 @@
 title: "WellRest: a rest timer that gets me off my phone"
 description: "Why I built an automatic rest timer for WHOOP strength workouts, how it gets better between sets, and why its real job is to send me back to the bar."
 pubDate: 2026-11-15
+draft: true
 ---
 
 ![WellRest: automatic-start setup and the rest dial](/projects/wellrest.webp)

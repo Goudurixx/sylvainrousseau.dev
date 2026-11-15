@@ -14,6 +14,15 @@
 		X-Content-Type-Options "nosniff"
 		X-Frame-Options "SAMEORIGIN"
 		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+
+	# Pages revalidate on every visit so updates show at once; assets keep a short cache.
+	@pages path / *.html */
+	header @pages Cache-Control "no-cache"
+	@assets path *.webp *.mp4 *.css *.js *.svg *.png
+	header @assets Cache-Control "public, max-age=3600"
+
+	header {
 		# TODO: tighten CSP if/when any external resources (fonts, analytics) are added.
 		# Content-Security-Policy "default-src 'self'"
 	}

@@ -28,7 +28,7 @@ export const projects: Project[] = [
     tags: ['Android', 'TFLite', 'CameraX', 'Benchmark'],
     year: '2026',
     image: '/projects/andronide.webp',
-    video: '/projects/andronide.mp4',
+    video: '/projects/andronide-hq.mp4',
     tier: 'more',
   },
   {
