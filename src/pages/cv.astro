@@ -1,64 +1,47 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const skills = [
-  'Counter-UAS', 'C-UAS', 'C2', 'MAVLink', 'Android', 'Kotlin',
-  'Computer Vision', 'Edge AI', 'RF/Radar integration', 'Defense',
-];
+import { roles, education, skills, spoken, links } from '../data/career';
 ---
 
 <BaseLayout
   title="CV"
-  description="CV — Software engineer, AI detection & counter-UAS systems, field-deployed defense software."
+  description="Sylvain Rousseau: technical lead and forward deployed engineer. Counter-UAS drones, ground control stations, edge AI, Android."
 >
-  <h1>CV</h1>
-  <p class="tagline">Software Engineer — AI Detection &amp; Counter-UAS · Field-Deployed Defense Systems</p>
-
-  <!-- TODO: add the real CV PDF at public/cv.pdf — this link will 404 until that file exists -->
-  <p><a class="button" href="/cv.pdf" download>Download CV (PDF)</a></p>
-
-  <h2>Summary</h2>
-  <p>
-    Software engineer, AI detection &amp; counter-UAS systems — I build and integrate defense software
-    and deploy it in the field (Ukraine, UAE, naval environments). Background spans on-device computer
-    vision (consumer security cameras), embedded AI on mobile (Android), and counter-UAS system
-    integration with allied C2 platforms.
-  </p>
+  <span class="eyebrow">Curriculum vitae</span>
+  <h1>Sylvain Rousseau</h1>
+  <p class="tagline">Senior software engineer · Technical lead. Embedded &amp; edge AI, systems &amp; C2 integration, Android. Paris.</p>
+  <ul class="link-list">{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
 
   <h2>Experience</h2>
+  {roles.map((r) => (
+    <div class="card">
+      <div class="card-meta">{r.org} · {r.place} · {r.period}</div>
+      <h3>{r.role}</h3>
+      <p>{r.context}</p>
+      {r.highlights.length > 0 && <ul>{r.highlights.map((h) => <li>{h}</li>)}</ul>}
+    </div>
+  ))}
+
+  <h2>Independent project</h2>
   <div class="card">
-    <div class="card-meta">Alta Ares · <!-- TODO: dates --></div>
-    <h3>Software Engineer — Counter-UAS Integration</h3>
-    <ul>
-      <li>Integrated counter-UAS systems with allied C2 platforms (C2 ecosystem, C2 integration).</li>
-      <li>Field deployments across multiple countries, including active conflict zones and naval environments.</li>
-      <li>Video pipeline hardening, radar/RF sensor fusion, tactical data links.</li>
-    </ul>
-  </div>
-  <div class="card">
-    <div class="card-meta">Netatmo · <!-- TODO: dates --></div>
-    <h3>Software Engineer — AI-Vision Security Cameras</h3>
-    <ul>
-      <li>Built on-device AI detection for consumer security cameras (person / vehicle / animal recognition).</li>
-      <li>Real-time video pipeline and edge inference on embedded hardware.</li>
-    </ul>
-  </div>
-  <div class="card">
-    <div class="card-meta">Allergenius · <!-- TODO: dates --></div>
-    <h3>Software Engineer — Embedded-AI Mobile App</h3>
-    <ul>
-      <!-- TODO: verify this capability framing against what was actually shipped -->
-      <li>Embedded AI application for on-device ingredient/allergen detection.</li>
-      <li>Mobile computer vision pipeline on Android.</li>
-    </ul>
+    <h3>Self-hosted LLM inference</h3>
+    <p>Distributed vLLM serving across two GPU edge nodes, running a 26B-parameter mixture-of-experts model on personal hardware.</p>
   </div>
 
   <h2>Skills</h2>
-  <div class="tags">
-    {skills.map((s) => <span class="tag">{s}</span>)}
-  </div>
+  {Object.entries(skills).map(([k, v]) => (
+    <div class="card">
+      <div class="card-meta">{k}</div>
+      <div class="tags">{v.map((t) => <span class="tag">{t}</span>)}</div>
+    </div>
+  ))}
+  <p class="section-note">Languages: {spoken.join(' · ')}</p>
 
   <h2>Education</h2>
-  <!-- TODO: add education entries -->
-  <p class="section-note">TODO: add education history.</p>
+  {education.map((e) => (
+    <div class="card">
+      <div class="card-meta">{e.school} · {e.period}</div>
+      <h3>{e.what}</h3>
+    </div>
+  ))}
 </BaseLayout>

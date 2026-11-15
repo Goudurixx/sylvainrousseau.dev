@@ -18,15 +18,17 @@ export const projects: Project[] = [
     tags: ['Kotlin', 'Compose', 'NotificationListener', 'GitHub Actions'],
     year: '2026',
     image: '/projects/wellrest.webp',
+    video: '/projects/wellrest.mp4',
     tier: 'featured',
   },
   {
     name: 'Edge Drone Detector',
     repo: 'andronide',
-    blurb: 'Work in progress: an SSD-MobileNet detector running on-device over the live camera feed, with an FPS and latency HUD, as a delegate benchmark.',
+    blurb: 'On-device SSD-MobileNet detection over the camera feed (or recorded footage in demo mode), with live FPS and latency. A benchmark, not an operational system.',
     tags: ['Android', 'TFLite', 'CameraX', 'Benchmark'],
     year: '2026',
     image: '/projects/andronide.webp',
+    video: '/projects/andronide.mp4',
     tier: 'more',
   },
   {
