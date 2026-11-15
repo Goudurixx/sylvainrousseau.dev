@@ -35,10 +35,10 @@ const years = (p: string) => p;
 
       <h2 class="cv-h">Experience</h2>
       <ol class="cv-timeline">
-        <span class="cv-orb" aria-hidden="true"></span>
+        <span class="cv-orb" role="slider" tabindex="0" aria-label="Scroll through the experience timeline" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></span>
         {roles.map((r) => (
           <li class={`cv-role ${r.current ? 'current' : ''}`}>
-            <span class="cv-node" aria-hidden="true"></span>
+            <button class="cv-node" type="button" aria-label={`Go to ${r.org}`}></button>
             <div class="panel cv-card">
               {r.visual && <div class="cv-strip" aria-hidden="true" style={`background-image:url(${r.visual})`}></div>}
               <div class="cv-card-body">
@@ -117,10 +117,34 @@ const years = (p: string) => p;
         const boost = Math.max(0, 1 - best / 70);
         tl.style.setProperty('--orb-boost', boost.toFixed(3));
         nodes.forEach((n) => n.classList.toggle('lit', n === hit && boost > 0.35));
+        tl.querySelector('.cv-orb')?.classList.toggle('rec', boost > 0.6);
         ticking = false;
       };
       addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(place); } }, { passive: true });
       addEventListener('resize', place); place();
+
+      // drag the orb like a scrubber: the whole timeline maps to one screen of drag
+      const orb = tl.querySelector<HTMLElement>('.cv-orb')!;
+      let lastY = 0, dragging = false;
+      const ratio = () => tl.getBoundingClientRect().height / (innerHeight * 0.8);
+      orb.addEventListener('pointerdown', (e) => { dragging = true; lastY = e.clientY; orb.setPointerCapture(e.pointerId); orb.classList.add('grab'); e.preventDefault(); });
+      orb.addEventListener('pointermove', (e) => { if (!dragging) return; scrollBy({ top: (e.clientY - lastY) * ratio(), behavior: 'instant' as ScrollBehavior }); lastY = e.clientY; });
+      const stop = () => { dragging = false; orb.classList.remove('grab'); };
+      orb.addEventListener('pointerup', stop); orb.addEventListener('pointercancel', stop);
+      orb.addEventListener('keydown', (e) => {
+        const step = { ArrowDown: 120, ArrowUp: -120, PageDown: innerHeight * 0.8, PageUp: -innerHeight * 0.8 }[e.key];
+        if (step) { scrollBy({ top: step, behavior: 'smooth' }); e.preventDefault(); }
+      });
+      addEventListener('scroll', () => {
+        const r = tl.getBoundingClientRect();
+        orb.setAttribute('aria-valuenow', String(Math.round(Math.min(Math.max((innerHeight * 0.45 - r.top) / r.height, 0), 1) * 100)));
+      }, { passive: true });
     }
+
+    // click a role's point to bring that role to the orb
+    document.querySelectorAll<HTMLElement>('.cv-node').forEach((n) => n.addEventListener('click', () => {
+      const top = n.getBoundingClientRect().top + scrollY - innerHeight * 0.45 + 6;
+      scrollTo({ top, behavior: 'smooth' });
+    }));
   </script>
 </BaseLayout>

@@ -359,3 +359,14 @@ main.narrow h2 { font-size: 1.6rem; margin-top: 1.8rem; }
 }
 .cv-node { transition: border-color .3s, box-shadow .3s, background .3s; }
 .cv-node.lit { border-color: var(--ok); background: var(--ok); box-shadow: 0 0 16px var(--ok); }
+
+/* the orb and the points are controls */
+.cv-orb { pointer-events: auto; cursor: grab; touch-action: none; }
+.cv-orb.grab { cursor: grabbing; }
+.cv-orb:focus-visible { outline: 2px solid var(--ok); outline-offset: 4px; }
+button.cv-node { padding: 0; cursor: pointer; appearance: none; }
+button.cv-node:hover { border-color: var(--ok); }
+
+/* on a role's point the orb blinks steadily, like a REC light */
+.cv-orb.rec { animation: rec-blink 1.1s steps(1, end) infinite; }
+@keyframes rec-blink { 0% { opacity: 1; } 55% { opacity: .25; } }
