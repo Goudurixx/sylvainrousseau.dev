@@ -12,7 +12,7 @@
 
 	header {
 		X-Content-Type-Options "nosniff"
-		X-Frame-Options "DENY"
+		X-Frame-Options "SAMEORIGIN"
 		Referrer-Policy "strict-origin-when-cross-origin"
 		# TODO: tighten CSP if/when any external resources (fonts, analytics) are added.
 		# Content-Security-Policy "default-src 'self'"

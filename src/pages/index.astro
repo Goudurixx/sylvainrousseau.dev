@@ -78,7 +78,7 @@ const [current, ...past] = roles;
               <p class="context">{r.context}</p>
               {r.highlights.length > 0 && <ul>{r.highlights.map((h) => <li>{h}</li>)}</ul>}
               {r.stack.length > 0 && <div class="tags">{r.stack.map((t) => <span class="tag">{t}</span>)}</div>}
-              {r.photo && <figure class="role-photo"><img src={r.photo.src} alt={r.photo.caption} loading="lazy" /><figcaption>{r.photo.caption}</figcaption></figure>}
+              {r.photo && <figure class="role-photo"><img src={r.photo.src} alt={r.photo.alt} loading="lazy" /></figure>}
             </div>
           </article>
         ))}
