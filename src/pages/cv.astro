@@ -1,47 +1,99 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { roles, education, skills, spoken, links } from '../data/career';
+
+const years = (p: string) => p;
 ---
 
 <BaseLayout
+  wide
   title="CV"
   description="Sylvain Rousseau: technical lead and forward deployed engineer. Counter-UAS drones, ground control stations, edge AI, Android."
 >
-  <span class="eyebrow">Curriculum vitae</span>
-  <h1>Sylvain Rousseau</h1>
-  <p class="tagline">Senior software engineer · Technical lead. Embedded &amp; edge AI, systems &amp; C2 integration, Android. Paris.</p>
-  <ul class="link-list">{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
-
-  <h2>Experience</h2>
-  {roles.map((r) => (
-    <div class="card">
-      <div class="card-meta">{r.org} · {r.place} · {r.period}</div>
-      <h3>{r.role}</h3>
-      <p>{r.context}</p>
-      {r.highlights.length > 0 && <ul>{r.highlights.map((h) => <li>{h}</li>)}</ul>}
+  <section class="cv-head">
+    <div class="wrap cv-head-grid">
+      <div class="cv-id">
+        <span class="eyebrow"><span class="dot"></span>Curriculum vitae · Paris</span>
+        <h1>Sylvain Rousseau</h1>
+        <p class="lede">Senior software engineer and technical lead. Embedded &amp; edge AI, systems &amp; C2 integration, Android. Shipped in the field, in defense.</p>
+        <div class="cta-row">
+          {links.map((l, i) => <a class={`button ${i ? 'ghost' : ''}`} href={l.href}>{l.label}</a>)}
+        </div>
+      </div>
+      <figure class="cv-portrait"><img src="/roles/field-a400m.webp" alt="Sylvain Rousseau before a field deployment" /></figure>
     </div>
-  ))}
+  </section>
 
-  <h2>Independent project</h2>
-  <div class="card">
-    <h3>Self-hosted LLM inference</h3>
-    <p>Distributed vLLM serving across two GPU edge nodes, running a 26B-parameter mixture-of-experts model on personal hardware.</p>
-  </div>
+  <section class="section" style="padding-top:2rem">
+    <div class="wrap">
+      <div class="figures">
+        <div class="figure"><b>6</b><span>people in the team I lead</span></div>
+        <div class="figure"><b>3</b><span>C2 integration bridges in 5 months</span></div>
+        <div class="figure"><b>3</b><span>countries of field deployment</span></div>
+        <div class="figure"><b>2M+</b><span>residents served by an app I built</span></div>
+      </div>
 
-  <h2>Skills</h2>
-  {Object.entries(skills).map(([k, v]) => (
-    <div class="card">
-      <div class="card-meta">{k}</div>
-      <div class="tags">{v.map((t) => <span class="tag">{t}</span>)}</div>
+      <h2 class="cv-h">Experience</h2>
+      <ol class="cv-timeline">
+        {roles.map((r) => (
+          <li class={`cv-role ${r.current ? 'current' : ''}`}>
+            <span class="cv-node" aria-hidden="true"></span>
+            <div class="panel cv-card">
+              {r.visual && <div class="cv-strip" aria-hidden="true" style={`background-image:url(${r.visual})`}></div>}
+              <div class="cv-card-body">
+                <div class="cv-meta"><span>{years(r.period)}</span><span>{r.place}</span></div>
+                <span class="org">{r.org}</span>
+                <h3>{r.role}</h3>
+                <p class="context">{r.context}</p>
+                {r.highlights.length > 0 && <ul>{r.highlights.map((h) => <li>{h}</li>)}</ul>}
+                {r.stack.length > 0 && <div class="tags">{r.stack.map((t) => <span class="tag">{t}</span>)}</div>}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <h2 class="cv-h">Skills</h2>
+      <div class="skills">
+        {Object.entries(skills).map(([k, v]) => (
+          <div class="panel"><h3>{k}</h3><div class="tags">{v.map((t) => <span class="tag">{t}</span>)}</div></div>
+        ))}
+      </div>
+
+      <div class="cv-two">
+        <div>
+          <h2 class="cv-h">Education</h2>
+          <div class="cv-edu">
+            {education.map((e) => (
+              <div class="panel cv-edu-item">
+                <span class="cv-meta"><span>{e.period}</span></span>
+                <h3>{e.what}</h3>
+                <span class="org">{e.school}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <h2 class="cv-h">Languages</h2>
+          <div class="panel cv-langs">
+            {spoken.map((s) => {
+              const [name, level] = s.split(' · ');
+              const pct = { native: 100, fluent: 85, professional: 65, conversational: 40 }[level] ?? 50;
+              return (
+                <div class="lang">
+                  <div class="lang-row"><span>{name}</span><span class="dim">{level}</span></div>
+                  <div class="bar"><i style={`width:${pct}%`}></i></div>
+                </div>
+              );
+            })}
+          </div>
+          <h2 class="cv-h">Independent project</h2>
+          <div class="panel cv-edu-item">
+            <h3>Self-hosted LLM inference</h3>
+            <p class="dim">Distributed vLLM serving across two GPU edge nodes, running a 26B-parameter mixture-of-experts model on personal hardware.</p>
+          </div>
+        </div>
+      </div>
     </div>
-  ))}
-  <p class="section-note">Languages: {spoken.join(' · ')}</p>
-
-  <h2>Education</h2>
-  {education.map((e) => (
-    <div class="card">
-      <div class="card-meta">{e.school} · {e.period}</div>
-      <h3>{e.what}</h3>
-    </div>
-  ))}
+  </section>
 </BaseLayout>

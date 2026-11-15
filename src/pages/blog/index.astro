@@ -7,19 +7,21 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 );
 ---
 
-<BaseLayout title="Blog" description="Short technical write-ups on defense-tech integration, edge AI, and field engineering.">
+<BaseLayout title="Blog" description="Notes from building things: edge AI, embedded displays, Android and drones.">
+  <span class="eyebrow"><span class="dot"></span>Notes</span>
   <h1>Blog</h1>
-  <p>Short, occasional posts — public-tech topics only, nothing sensitive.</p>
+  <p class="tagline">What broke, what I learned, and how it got fixed.</p>
 
-  <ul class="post-list">
+  <div class="post-cards">
     {posts.map((post) => (
-      <li>
+      <a class="panel post-card" href={`/blog/${post.id}/`}>
         <time datetime={post.data.pubDate.toISOString()}>
           {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
         </time>
-        <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+        <h2>{post.data.title}</h2>
         <p>{post.data.description}</p>
-      </li>
+        <span class="read">Read →</span>
+      </a>
     ))}
-  </ul>
+  </div>
 </BaseLayout>

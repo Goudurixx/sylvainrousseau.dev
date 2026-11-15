@@ -276,3 +276,47 @@ main.narrow h2 { font-size: 1.6rem; margin-top: 1.8rem; }
 .role-portrait img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 30%; border-radius: 14px; border: 1px solid var(--line-strong); display: block; }
 @media (max-width: 1000px) { .role.current { grid-template-columns: 11rem 1fr; } .role-portrait { grid-column: 2; max-width: 16rem; } }
 @media (max-width: 720px) { .role.current { grid-template-columns: 1fr; } .role-portrait { grid-column: auto; } }
+
+/* ---------- CV page ---------- */
+.cv-head { padding: 7rem 0 1rem; position: relative; overflow: hidden; }
+.cv-head::before { content: ''; position: absolute; width: 50rem; height: 50rem; right: -20rem; top: -25rem; border-radius: 50%; background: radial-gradient(circle, rgba(62,240,193,.16), transparent 65%); pointer-events: none; }
+.cv-head-grid { display: grid; grid-template-columns: 1fr 17rem; gap: 2.5rem; align-items: end; }
+.cv-id { display: grid; gap: 1.1rem; }
+.cv-id .lede { color: #c4cedb; font-size: 1.15rem; max-width: 40rem; }
+.cv-portrait { margin: 0; }
+.cv-portrait img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: 50% 30%; border-radius: 18px; border: 1px solid var(--line-strong); box-shadow: 0 30px 80px -30px rgba(62,240,193,.35); display: block; }
+@media (max-width: 760px) { .cv-head-grid { grid-template-columns: 1fr; } .cv-portrait { max-width: 15rem; } }
+.cv-h { font-size: 1.7rem; margin: 3.5rem 0 1.4rem; }
+.cv-timeline { list-style: none; margin: 0; padding: 0 0 0 1.6rem; display: grid; gap: 1rem; position: relative; }
+.cv-timeline::before { content: ''; position: absolute; left: .45rem; top: .5rem; bottom: .5rem; width: 2px; background: linear-gradient(var(--ok), var(--ai) 40%, var(--line)); border-radius: 2px; }
+.cv-role { position: relative; }
+.cv-node { position: absolute; left: -1.45rem; top: 1.5rem; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--ai); }
+.cv-role.current .cv-node { border-color: var(--ok); box-shadow: 0 0 12px var(--ok); background: var(--ok); }
+.cv-card { overflow: hidden; display: grid; }
+.cv-strip { height: 6.5rem; background-size: cover; background-position: center; opacity: .55; mask-image: linear-gradient(to bottom, black, transparent); -webkit-mask-image: linear-gradient(to bottom, black, transparent); }
+.cv-card-body { padding: 1.3rem 1.5rem 1.5rem; display: grid; gap: .6rem; }
+.cv-strip + .cv-card-body { margin-top: -3rem; position: relative; }
+.cv-card .org { color: var(--ai); font-weight: 500; }
+.cv-card .context { color: #b8c3d1; }
+.cv-card ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .35rem; color: #d3dbe6; }
+.cv-card li::marker { color: var(--ok); }
+.cv-meta { display: flex; gap: 1rem; font: 400 .78rem/1.4 var(--mono); color: var(--dim); }
+.cv-two { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+@media (max-width: 800px) { .cv-two { grid-template-columns: 1fr; } }
+.cv-edu { display: grid; gap: .8rem; }
+.cv-edu-item { padding: 1.1rem 1.3rem; display: grid; gap: .35rem; }
+.cv-edu-item .org { color: var(--ai); font-size: .92rem; }
+.cv-langs { padding: 1.2rem 1.3rem; display: grid; gap: .9rem; }
+.lang-row { display: flex; justify-content: space-between; font-size: .95rem; margin-bottom: .35rem; }
+.dim { color: var(--dim); }
+.cv-langs .bar { height: 6px; border-radius: 6px; background: rgba(255,255,255,.06); overflow: hidden; }
+.cv-langs .bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--ok), var(--ai)); }
+
+/* ---------- blog list ---------- */
+.post-cards { display: grid; gap: 1rem; margin-top: 1rem; }
+.post-card { padding: 1.4rem 1.5rem; display: grid; gap: .5rem; color: var(--ink); transition: border-color .25s, transform .25s; }
+.post-card:hover { color: var(--ink); border-color: var(--line-strong); transform: translateY(-2px); }
+.post-card time { font: 400 .78rem/1.4 var(--mono); color: var(--dim); }
+.post-card h2 { font-size: 1.45rem; margin: 0; }
+.post-card p { color: #b8c3d1; }
+.post-card .read { color: var(--ok); font-size: .9rem; }
