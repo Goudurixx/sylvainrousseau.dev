@@ -6,16 +6,16 @@
 #   (cloudflared will restart-loop without a real TUNNEL_TOKEN — harmless, caddy
 #    still serves the site. Run `docker compose up caddy` to skip it entirely.)
 #
-# NAS use (per plan-5 M2): same file, real token in .env, no host port needed
+# Production: same file, real token in .env, no host port needed
 # beyond what's already here (127.0.0.1-bound, not reachable from the LAN/WAN —
-# the tunnel is the only public path, see docs/deploy-runbook.md).
+# the tunnel is the only public path,).
 
 services:
   caddy:
     image: caddy:2-alpine
     container_name: website-caddy
     restart: unless-stopped
-    # Bound to loopback only: reachable for local testing / NAS-local checks,
+    # Bound to loopback only: reachable for local testing,
     # never exposed on the LAN interface or forwarded through the router.
     ports:
       - "127.0.0.1:${HOST_PORT:-8080}:80"
@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
     command: tunnel --no-autoupdate run
     environment:
-      # TODO (NAS only): set a real tunnel token in .env — see docs/deploy-runbook.md.
+      # Production: set a real tunnel token in .env.
       # Never commit a real token; .env is gitignored.
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-}
     depends_on:

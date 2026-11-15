@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Pulse demo</title>
+<style>
+:root{
+  --bg:#05070b; --panel:rgba(255,255,255,.035); --line:rgba(255,255,255,.08);
+  --ink:#e8eef6; --dim:#7d8a9c; --ok:#3ef0c1; --warn:#ffb547; --bad:#ff5470; --ai:#9b8cff;
+  --mood:var(--ok);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
+  font:15px/1.4 "Inter","DejaVu Sans",system-ui,sans-serif;user-select:none}
+body.cursor{cursor:default}
+#app{display:grid;grid-template-columns:1.25fr 1fr;height:100%;gap:2vmin;padding:2.4vmin}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px}
+
+/* left: the orb */
+#stage{position:relative;overflow:hidden}
+#orb{position:absolute;inset:0;width:100%;height:100%}
+#clock{position:absolute;left:3vmin;top:2.4vmin}
+#clock .t{font-size:8.5vmin;font-weight:200;letter-spacing:-.04em;line-height:1}
+#clock .d{color:var(--dim);font-size:2.2vmin;text-transform:uppercase;letter-spacing:.2em;margin-top:.6vmin}
+#verdict{position:absolute;left:0;right:0;bottom:3vmin;text-align:center}
+#verdict .big{font-size:3vmin;font-weight:300;letter-spacing:.04em}
+#verdict .small{color:var(--dim);font-size:1.9vmin;margin-top:.4vmin}
+
+/* right column */
+#side{display:grid;grid-template-rows:auto 1fr auto;gap:2vmin;min-height:0}
+h2{font-size:1.7vmin;font-weight:600;color:var(--dim);letter-spacing:.22em;text-transform:uppercase;margin-bottom:1.4vmin}
+#machines{padding:2vmin 2.2vmin}
+.m{display:grid;grid-template-columns:7.5em 1fr 3.2em;align-items:center;gap:1.2vmin;margin:1vmin 0;font-size:2.1vmin}
+.m .n{display:flex;align-items:center;gap:.8vmin;white-space:nowrap}
+.dot{width:1.1vmin;height:1.1vmin;border-radius:50%;background:var(--dim);flex:none}
+.dot.up{background:var(--ok);box-shadow:0 0 1.4vmin var(--ok)} .dot.down{background:var(--bad);box-shadow:0 0 1.4vmin var(--bad)}
+.bars{display:grid;gap:.45vmin}
+.bar{height:.75vmin;border-radius:1vmin;background:rgba(255,255,255,.06);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:inherit;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.bar.cpu i{background:linear-gradient(90deg,#2bd6ff,var(--ok))} .bar.mem i{background:linear-gradient(90deg,#7a6bff,var(--ai))}
+.m .v{text-align:right;color:var(--dim);font-variant-numeric:tabular-nums;font-size:1.8vmin}
+.legend{display:flex;gap:2vmin;color:var(--dim);font-size:1.5vmin;margin-top:.6vmin}
+.legend b{display:inline-block;width:2vmin;height:.6vmin;border-radius:1vmin;vertical-align:middle;margin-right:.6vmin}
+
+#services{padding:2vmin 2.2vmin;min-height:0;overflow:hidden}
+#svc{display:grid;grid-template-columns:repeat(auto-fill,minmax(15vmin,1fr));gap:1vmin}
+.s{display:flex;align-items:center;gap:.9vmin;padding:1.1vmin 1.2vmin;border-radius:12px;background:rgba(255,255,255,.025);
+  font-size:1.85vmin;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .6s}
+.s.down{background:rgba(255,84,112,.12);color:#ffc2cc}
+
+#talk{display:flex;align-items:center;gap:1.4vmin;padding:1.8vmin 2.2vmin;cursor:pointer;
+  background:linear-gradient(120deg,rgba(155,140,255,.16),rgba(62,240,193,.08));border-color:rgba(155,140,255,.35)}
+#talk .glyph{width:5vmin;height:5vmin;border-radius:50%;flex:none;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--ai) 35%,#3a2f8a 80%);box-shadow:0 0 3vmin rgba(155,140,255,.6);animation:breathe 4s ease-in-out infinite}
+#talk .l1{font-size:2.3vmin} #talk .l2{color:var(--dim);font-size:1.6vmin}
+@keyframes breathe{50%{transform:scale(.88);box-shadow:0 0 1.5vmin rgba(155,140,255,.4)}}
+
+/* chat sheet */
+#chat{position:fixed;inset:0;background:rgba(5,7,11,.82);backdrop-filter:blur(14px);display:flex;flex-direction:column;
+  padding:2.4vmin;gap:1.6vmin;transform:translateY(100%);transition:transform .45s cubic-bezier(.2,.9,.2,1)}
+#chat.open{transform:none}
+#chat header{display:flex;align-items:center;gap:1.4vmin}
+#chat header .glyph{width:4vmin;height:4vmin;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--ai) 35%,#3a2f8a 80%)}
+#chat header .glyph.think{animation:breathe 1s ease-in-out infinite}
+#chat header .ttl{flex:1;font-size:2.4vmin} #chat header .ttl small{color:var(--dim);font-size:1.6vmin;margin-left:1vmin}
+button{font:inherit;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:12px;padding:1.2vmin 2vmin;cursor:pointer}
+#log{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1.2vmin;padding-right:.6vmin;scroll-behavior:smooth;user-select:text}
+.msg{max-width:78%;padding:1.4vmin 1.8vmin;border-radius:16px;font-size:2.2vmin;white-space:pre-wrap;line-height:1.45}
+.msg.user{align-self:flex-end;background:rgba(62,240,193,.12);border-bottom-right-radius:4px}
+.msg.assistant{align-self:flex-start;background:rgba(155,140,255,.12);border-bottom-left-radius:4px}
+.msg.err{align-self:center;color:var(--bad);font-size:1.8vmin;background:none}
+#chips{display:flex;gap:1vmin;flex-wrap:wrap}
+#chips button{font-size:1.8vmin;padding:1vmin 1.6vmin;border-radius:20px}
+#ask{display:flex;gap:1vmin}
+#ask input{flex:1;font:inherit;font-size:2.3vmin;color:var(--ink);background:rgba(255,255,255,.05);border:1px solid var(--line);
+  border-radius:14px;padding:1.4vmin 1.8vmin;outline:none}
+#ask input:focus{border-color:var(--ai)}
+#mic{opacity:.35} /* wired later, when the mic arrives */
+/* 3.5" 480x320 goodtft panel: orb left, compact list right, no service grid */
+@media (max-height:360px){
+  #app{grid-template-columns:1fr 1fr;padding:6px;gap:6px}
+  .card{border-radius:10px}
+  #clock .t{font-size:34px} #clock .d{font-size:9px}
+  #verdict .big{font-size:13px} #verdict .small{font-size:9px;padding:0 6px}
+  h2{font-size:9px;margin-bottom:4px}
+  #machines,#services{padding:7px 8px}
+  .m{font-size:11px;grid-template-columns:5.6em 1fr 2.6em;margin:3px 0;gap:5px} .m .v{font-size:10px}
+  .bar{height:4px} .dot{width:6px;height:6px} .legend{display:none}
+  #svc{grid-template-columns:1fr 1fr;gap:3px} .s{font-size:10px;padding:3px 5px;border-radius:6px;gap:4px}
+  #talk{padding:7px 9px;gap:8px} #talk .glyph{width:22px;height:22px} #talk .l1{font-size:13px} #talk .l2{font-size:9px}
+  #chat{padding:6px;gap:5px} #chat header .ttl{font-size:13px} button{padding:5px 9px;font-size:11px;border-radius:8px}
+  .msg{font-size:12px;padding:6px 9px;max-width:88%} #chips button{font-size:10px;padding:4px 8px}
+  #ask input{font-size:12px;padding:6px 9px}
+}
+/* the same panel held upright: 320x480 */
+html.panel,html.panel body{width:320px;height:480px;overflow:hidden}
+html.panel #app{grid-template-columns:1fr;grid-template-rows:1fr auto;padding:6px;gap:6px}
+html.panel .card{border-radius:10px}
+html.panel #clock{left:10px;top:8px}
+html.panel #clock .t{font-size:40px}
+html.panel #clock .d{font-size:9px}
+html.panel #verdict{bottom:8px}
+html.panel #verdict .big{font-size:14px}
+html.panel #verdict .small{font-size:9px;padding:0 8px}
+html.panel #side{grid-template-rows:auto auto auto;gap:6px}
+html.panel h2{font-size:9px;margin-bottom:3px}
+html.panel #machines,html.panel #services{padding:6px 9px}
+html.panel .m{font-size:11px;grid-template-columns:5.6em 1fr 2.6em;margin:2px 0;gap:6px}
+html.panel .m .v{font-size:10px}
+html.panel .bar{height:4px}
+html.panel .dot{width:6px;height:6px}
+html.panel .legend{display:none}
+html.panel #svc{grid-template-columns:1fr 1fr 1fr;gap:3px}
+html.panel .s{font-size:9px;padding:3px 4px;border-radius:6px;gap:3px}
+html.panel #talk{padding:7px 9px;gap:8px}
+html.panel #talk .glyph{width:22px;height:22px}
+html.panel #talk .l1{font-size:13px}
+html.panel #talk .l2{font-size:9px}
+html.panel #chat{padding:6px;gap:5px}
+html.panel #chat header .ttl{font-size:13px}
+html.panel button{padding:5px 9px;font-size:11px;border-radius:8px}
+html.panel .msg{font-size:12px;padding:6px 9px;max-width:90%}
+html.panel #chips button{font-size:10px;padding:4px 8px}
+html.panel #ask input{font-size:12px;padding:6px 9px}
+/* this panel shows red and blue swapped: swap them back (?bgr=0 to disable) */
+html.panel #orb{inset:auto;left:50%;top:54%;width:200px;height:200px;transform:translate(-50%,-50%)}
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="stage" class="card">
+    <canvas id="orb"></canvas>
+    <div id="clock"><div class="t">--:--</div><div class="d"></div></div>
+    <div id="verdict"><div class="big">Waking up…</div><div class="small"></div></div>
+  </section>
+  <section id="side">
+    <div id="machines" class="card"><h2>Machines</h2><div id="mlist"></div>
+      <div class="legend"><span><b style="background:var(--ok)"></b>CPU</span><span><b style="background:var(--ai)"></b>Memory</span></div></div>
+    <div id="services" class="card"><h2>Services</h2><div id="svc"></div></div>
+    <div id="talk" class="card"><div class="glyph"></div><div><div class="l1">Talk to Pulse</div><div class="l2" id="modelname">local model</div></div></div>
+  </section>
+</div>
+
+<div id="chat">
+  <header><div class="glyph" id="cg"></div><div class="ttl">Pulse<small id="cm"></small></div>
+    <button id="clear">New</button><button id="close">Close</button></header>
+  <div id="log"></div>
+  <div id="chips"></div>
+  <form id="ask"><button type="button" id="mic" title="Voice comes with the mic">🎙</button>
+    <input id="q" placeholder="Ask your homelab…" autocomplete="off"><button>Send</button></form>
+</div>
+
+<svg width="0" height="0" style="position:absolute"><filter id="rb" color-interpolation-filters="sRGB">
+  <feColorMatrix type="matrix" values="0 0 1 0 0  0 1 0 0 0  1 0 0 0 0  0 0 0 1 0"/></filter></svg>
+<script src="shim.js"></script>
+<script>
+// the 3.5in panel: Chromium keeps its window >= ~500px wide, so key off the real screen size
+if(screen.width<=360&&!/panel=0/.test(location.search)) document.documentElement.classList.add("panel");
+// The panel shows red and blue swapped. Swap them in the stylesheet itself rather than with a
+// page-wide filter, which forced a full-screen redraw (and full SPI transfer) on every frame.
+if(document.documentElement.classList.contains("panel")){
+  const st=document.querySelector("style");
+  st.textContent=st.textContent
+    .replace(/#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})\b/gi,"#$3$2$1")
+    .replace(/rgba\((\d+),(\d+),(\d+),/g,"rgba($3,$2,$1,");
+}
+// Prometheus job -> label shown on screen. Generic on purpose (this file is public):
+// override with PULSE_LABELS in /etc/pulse.env, e.g. "nas_node=Storage,pve_node=Hypervisor".
+const MACHINES=[["nas_node","NAS"],["pve_node","Proxmox"],["nx_node","AI pool 1"],["xavier_node","AI pool 2"]];
+const $=s=>document.querySelector(s);
+const state={cpu:{},mem:{},up:{},svc:[],net:0,health:1,ok:true};
+
+async function q(query){
+  const r=await fetch("/api/q?query="+encodeURIComponent(query)); const j=await r.json();
+  if(j.status!=="success") throw new Error(j.error||"prometheus"); return j.data.result;
+}
+const byJob=(rows,f=v=>+v)=>Object.fromEntries(rows.map(r=>[r.metric.job,f(r.value[1])]));
+
+async function refresh(){
+  try{
+    const [cpu,mem,up,svc,net]=await Promise.all([
+      q('100-avg by(job)(rate(node_cpu_seconds_total{mode="idle"}[2m]))*100'),
+      q('(1-node_memory_MemAvailable_bytes/node_memory_MemTotal_bytes)*100'),
+      q('up{job=~".*_node"}'),
+      q('probe_success'),
+      q('sum(rate(node_network_receive_bytes_total{job="nas_node",device!~"lo|veth.*|docker.*|br.*"}[1m]))*8'),
+    ]);
+    state.cpu=byJob(cpu); state.mem=byJob(mem); state.up=byJob(up);
+    state.svc=svc.map(r=>({name:r.metric.service||r.metric.instance,ok:r.value[1]==="1"})).sort((a,b)=>a.ok-b.ok||a.name.localeCompare(b.name));
+    state.net=net.length?+net[0].value[1]:0; state.ok=true;
+  }catch(e){state.ok=false}
+  render();
+}
+
+function render(){
+  $("#mlist").innerHTML=MACHINES.map(([j,l])=>{
+    const up=state.up[j], c=state.cpu[j]??0, m=state.mem[j]??0;
+    return `<div class="m"><div class="n"><span class="dot ${up===1?"up":up===0?"down":""}"></span>${l}</div>
+      <div class="bars"><div class="bar cpu"><i style="width:${c.toFixed(0)}%"></i></div><div class="bar mem"><i style="width:${m.toFixed(0)}%"></i></div></div>
+      <div class="v">${up===0?"down":c.toFixed(0)+"%"}</div></div>`}).join("");
+  $("#svc").innerHTML=state.svc.map(s=>`<div class="s ${s.ok?"":"down"}"><span class="dot ${s.ok?"up":"down"}"></span>${s.name}</div>`).join("");
+  const down=[...MACHINES.filter(([j])=>state.up[j]===0).map(([,l])=>l),...state.svc.filter(s=>!s.ok).map(s=>s.name)];
+  const total=MACHINES.length+state.svc.length;
+  state.health=state.ok?1-down.length/Math.max(total,1):0;
+  const mood=!state.ok?"--bad":down.length===0?"--ok":down.length<3?"--warn":"--bad";
+  document.documentElement.style.setProperty("--mood",`var(${mood})`);
+  orb.color=getComputedStyle(document.documentElement).getPropertyValue(mood).trim();
+  orb.energy=Math.min(1,avg(Object.values(state.cpu))/60+state.net/4e8);
+  $("#verdict .big").textContent=!state.ok?"I can't reach Prometheus":down.length?`${down.length} thing${down.length>1?"s":""} need${down.length>1?"":"s"} you`:"All quiet. Everything is up.";
+  $("#verdict .small").textContent=!state.ok?"Is the Pi on the home network?":down.length?down.join(" · "):`${total} checks · NAS in ${fmtBits(state.net)}`;
+}
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+const fmtBits=b=>b>1e9?(b/1e9).toFixed(1)+" Gb/s":b>1e6?(b/1e6).toFixed(0)+" Mb/s":(b/1e3).toFixed(0)+" kb/s";
+
+/* ---- the orb: a breathing particle field whose colour is the homelab's mood
+   and whose agitation follows CPU + network load ---- */
+const orb={color:"#3ef0c1",energy:.1,e:.1};
+(function(){
+  const cv=$("#orb"),cx=cv.getContext("2d"); let W,H,P=[];
+  function size(){const r=cv.getBoundingClientRect();W=cv.width=r.width*devicePixelRatio;H=cv.height=r.height*devicePixelRatio}
+  addEventListener("resize",size); size();
+  for(let i=0;i<260;i++)P.push({a:Math.random()*6.283,r:Math.random(),s:.2+Math.random()*.8,z:Math.random()});
+  let t=0;
+  (function frame(){
+    t+=(.008+orb.e*.02)*(document.documentElement.classList.contains("panel")?4:1); orb.e+=(orb.energy-orb.e)*.02;
+    cx.clearRect(0,0,W,H);
+    const X=W/2,Y=H*.52,R=Math.min(W,H)*(document.documentElement.classList.contains("panel")?.3:.27)*(1+.04*Math.sin(t*2));
+    const g=cx.createRadialGradient(X,Y,0,X,Y,R*1.7);
+    g.addColorStop(0,orb.color+"55");g.addColorStop(.45,orb.color+"14");g.addColorStop(1,"transparent");
+    cx.fillStyle=g;cx.beginPath();cx.arc(X,Y,R*1.7,0,6.283);cx.fill();
+    cx.fillStyle=orb.color;
+    for(const p of P){
+      p.a+=.002*p.s*(1+orb.e*4)*(document.documentElement.classList.contains("panel")?4:1);
+      const wob=1+.12*Math.sin(t*3*p.s+p.a*4)*(.4+orb.e);
+      const rr=R*(.35+.65*Math.sqrt(p.r))*wob;
+      const x=X+Math.cos(p.a)*rr, y=Y+Math.sin(p.a)*rr*.92;
+      cx.globalAlpha=.25+.75*p.z; cx.beginPath(); cx.arc(x,y,(.6+p.z*1.6)*devicePixelRatio,0,6.283); cx.fill();
+    }
+    cx.globalAlpha=1;
+    // timer, not requestAnimationFrame: the SPI panel never sends frame callbacks, so rAF stalls
+    setTimeout(frame, document.documentElement.classList.contains("panel")?66:16);
+  })();
+})();
+
+function tick(){const d=new Date();
+  $("#clock .t").textContent=d.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"});
+  $("#clock .d").textContent=d.toLocaleDateString("fr-FR", {weekday:"long",day:"numeric",month:"long"});}
+setInterval(tick,1000);tick(); setInterval(refresh,10000);refresh();
+
+/* ---- chat with the local model ---- */
+let history=[];
+const CHIPS=["How is the homelab doing?","Is anything down?","Which machine is the busiest?","Tell me a joke about servers"];
+$("#chips").innerHTML=CHIPS.map(c=>`<button type="button">${c}</button>`).join("");
+$("#chips").onclick=e=>{if(e.target.tagName==="BUTTON")send(e.target.textContent)};
+$("#talk").onclick=()=>{$("#chat").classList.add("open");setTimeout(()=>$("#q").focus(),400)};
+$("#close").onclick=()=>{$("#chat").classList.remove("open");$("#q").blur()};
+$("#clear").onclick=()=>{history=[];$("#log").innerHTML=""};
+$("#ask").onsubmit=e=>{e.preventDefault();const v=$("#q").value.trim();if(v){$("#q").value="";send(v)}};
+fetch("/api/config").then(r=>r.json()).then(c=>{$("#modelname").textContent=c.model+" · local, never the cloud";$("#cm").textContent=c.model;
+  for(const m of MACHINES) if(c.labels&&c.labels[m[0]]) m[1]=c.labels[m[0]]; render()});
+
+function bubble(role,text){const d=document.createElement("div");d.className="msg "+role;d.textContent=text;$("#log").append(d);$("#log").scrollTop=1e9;return d}
+function snapshot(){
+  return MACHINES.map(([j,l])=>`${l}: ${state.up[j]===0?"DOWN":`cpu ${(state.cpu[j]??0).toFixed(0)}%, mem ${(state.mem[j]??0).toFixed(0)}%`}`).join("\n")
+    +"\nServices: "+state.svc.map(s=>`${s.name} ${s.ok?"up":"DOWN"}`).join(", ")+`\nNAS inbound ${fmtBits(state.net)}. Time ${new Date().toLocaleString()}`;
+}
+async function send(text){
+  history.push({role:"user",content:text}); bubble("user",text);
+  const out=bubble("assistant","…"); $("#cg").classList.add("think"); let acc="";
+  try{
+    const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({messages:history,context:snapshot()})});
+    if(!r.ok) throw new Error((await r.json()).error||r.status);
+    const rd=r.body.getReader(),dec=new TextDecoder(); let buf="";
+    for(;;){const {done,value}=await rd.read(); if(done)break; buf+=dec.decode(value,{stream:true});
+      let i; while((i=buf.indexOf("\n"))>=0){const line=buf.slice(0,i);buf=buf.slice(i+1);
+        if(!line.trim())continue; const j=JSON.parse(line); if(j.message?.content){acc+=j.message.content;out.textContent=acc;$("#log").scrollTop=1e9}}}
+    history.push({role:"assistant",content:acc});
+  }catch(e){out.remove();bubble("err","The model didn't answer: "+e.message);history.pop()}
+  $("#cg").classList.remove("think");
+}
+addEventListener("pulse-ask",e=>send(e.detail));
+addEventListener("mousemove",()=>{document.body.classList.add("cursor");clearTimeout(window._c);window._c=setTimeout(()=>document.body.classList.remove("cursor"),3000)});
+</script>
+</body>
+</html>

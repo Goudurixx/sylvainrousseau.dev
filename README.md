@@ -5,7 +5,7 @@ logic, no database, no client-side JS beyond what Astro emits for markdown/CSS �
 only.
 
 See `/plan-5-selfhosted-website.md` (in the parent outputs folder) for the full project spec, and
-`docs/deploy-runbook.md` for NAS deployment steps.
+the deployment notes kept outside this repo.
 
 ## Local development
 
@@ -22,7 +22,6 @@ npm run preview  # serve the production build locally
 - `src/content/blog/` — markdown blog posts
 - `src/layouts/BaseLayout.astro` — shared HTML shell, dark theme, no client JS
 - `docker-compose.yml`, `Caddyfile`, `.env.example` — self-hosting stack (see spec M1/M2)
-- `docs/deploy-runbook.md` — step-by-step NAS deployment guide
 
 ## Content that needs filling in before publishing
 

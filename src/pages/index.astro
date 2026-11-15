@@ -1,110 +1,287 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { roles, skills, spoken, links } from '../data/career';
+import { projects } from '../data/projects';
 
-const positioning =
-  'Software engineer, AI detection & counter-UAS systems — I build and integrate defense software and deploy it in the field (Ukraine, UAE, naval environments).';
-
-const headline =
-  'Software Engineer — AI Detection & Counter-UAS · Field-Deployed Defense Systems · Android · Embedded AI · C2/C2 integration';
-
-// NOTE: `period` is intentionally blank — dates are not confirmed. See <!-- TODO --> markers below.
-const workCards = [
-  {
-    org: 'Alta Ares',
-    role: 'Software Engineer — Counter-UAS Integration',
-    period: '',
-    bullets: [
-      'Integrated counter-UAS systems with allied C2 platforms (C2 ecosystem, C2 integration).',
-      'Field deployments across multiple countries, including active conflict zones and naval environments.',
-      'Video pipeline hardening, radar/RF sensor fusion, tactical data links.',
-    ],
-    tags: ['Counter-UAS', 'C2', 'C2 integration', 'RF/Radar', 'Defense'],
-  },
-  {
-    org: 'Netatmo',
-    role: 'Software Engineer — AI-Vision Security Cameras',
-    period: '',
-    bullets: [
-      'Built on-device AI detection for consumer security cameras (person / vehicle / animal recognition).',
-      'Real-time video pipeline and edge inference on embedded hardware.',
-    ],
-    tags: ['Computer Vision', 'Edge AI', 'Embedded'],
-  },
-  {
-    org: 'Allergenius',
-    role: 'Software Engineer — Embedded-AI Mobile App',
-    period: '',
-    bullets: [
-      'Embedded AI application for on-device ingredient/allergen detection.',
-      'Mobile computer vision pipeline on Android.',
-    ],
-    tags: ['Android', 'Kotlin', 'Computer Vision', 'Edge AI'],
-  },
-];
-
-// TODO: replace with real side projects (e.g. Plan 1 mini web GCS) once shipped, and link their repos
-const projectCards = [
-  {
-    name: 'Mini Web Ground Control Station',
-    description:
-      'MAVLink-based ground control station built on open tech, to show how the C2/MAVLink world works from the outside.',
-    href: '#', // TODO: link to real repo once published
-    status: 'planned',
-  },
-];
-
-// TODO: replace with real profile URLs before publishing
-const links = [
-  { label: 'GitHub', href: 'https://github.com/goudurixx' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/sylvain65' },
-  { label: 'Email', href: 'mailto:6sylvain5@gmail.com' },
-];
+const featured = projects.filter((p) => p.tier === 'featured');
+const more = projects.filter((p) => p.tier === 'more');
+const archive = projects.filter((p) => p.tier === 'archive');
+const gh = (repo?: string) => (repo ? `https://github.com/Goudurixx/${repo}` : '#');
+const [current, ...past] = roles;
 ---
 
 <BaseLayout
+  wide
   title="Home"
-  description="Software engineer working on AI detection and counter-UAS systems, field-deployed defense software, and embedded AI."
+  description="Sylvain Rousseau, technical lead and forward deployed engineer: counter-UAS drones, ground control stations, edge AI and Android."
 >
-  <h1>Sylvain Rousseau</h1>
-  <p class="tagline">{headline}</p>
-  <p>{positioning}</p>
-
-  <!-- TODO: fill in real GitHub / LinkedIn / email hrefs above before publishing -->
-  <ul class="link-list">
-    {links.map((l) => (
-      <li><a href={l.href}>{l.label}</a></li>
-    ))}
-  </ul>
-
-  <h2>Experience</h2>
-  <!--
-    TODO: confirm exact employment dates/titles for all three roles before publishing.
-    TODO (Allergenius): verify the capability framing below against what was actually shipped.
-  -->
-  {workCards.map((w) => (
-    <div class="card">
-      <div class="card-meta">{w.org}{w.period ? ` · ${w.period}` : ''}</div>
-      <h3>{w.role}</h3>
-      <ul>
-        {w.bullets.map((b) => <li>{b}</li>)}
-      </ul>
-      <div class="tags">
-        {w.tags.map((t) => <span class="tag">{t}</span>)}
+  <section class="hero" id="top">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="grid-floor" data-depth="0.35" aria-hidden="true"></div>
+    <div class="hero-photo" data-depth="0.2" aria-hidden="true"></div>
+    <div class="wrap hero-copy" data-depth="-0.18">
+      <span class="eyebrow"><span class="dot"></span>Technical lead · Forward deployed engineer · Paris</span>
+      <h1>Sylvain Rousseau</h1>
+      <p class="lede">
+        I take ambiguous, high-stakes problems from zero to production. Today that means
+        <b>interceptor drones and a ground control station</b> at Alta Ares, shipped and supported on
+        military sites. Before that: <b>AI-vision cameras</b> at Netatmo and Android apps used by millions.
+      </p>
+      <div class="status-strip" aria-label="At a glance">
+        <span><i></i>Embedded &amp; edge AI</span>
+        <span><i></i>C2 integration · MAVLink</span>
+        <span><i></i>Android · Compose</span>
+        <span><i class="ai"></i>Self-hosted LLMs</span>
+      </div>
+      <div class="cta-row">
+        <a class="button" href="#work">See the work</a>
+        <a class="button ghost" href="#pulse">Play with Pulse</a>
+        <a class="button ghost" href="/cv">CV</a>
       </div>
     </div>
-  ))}
+  </section>
 
-  <h2>Side projects</h2>
-  {projectCards.map((p) => (
-    <div class="card">
-      <div class="card-meta">{p.status}</div>
-      <h3><a href={p.href}>{p.name}</a></h3>
-      <p>{p.description}</p>
+  <section class="section" id="work">
+    <div class="bg-photo right" data-depth="0.12" aria-hidden="true" style="background-image:url(/bg/airframe.webp)"></div>
+    <div class="wrap">
+      <div class="figures reveal" data-depth="0.04">
+        <div class="figure"><b>6</b><span>people at Alta Ares since I joined, 9 months</span></div>
+        <div class="figure"><b>3</b><span>C2 integration bridges shipped from scratch in 5 months</span></div>
+        <div class="figure"><b>~5 mo</b><span>embedded on sites in Ukraine, the UAE and France</span></div>
+        <div class="figure"><b>2M+</b><span>residents served by an app I built from the first commit</span></div>
+      </div>
+
+      <div class="section-head" style="margin-top:5rem">
+        <span class="eyebrow">Experience</span>
+        <h2>Shipped in the field, in defense, and in people's pockets.</h2>
+      </div>
+
+      <div class="timeline">
+        <article class="panel role current reveal has-visual">
+          {current.visual && <div class="role-visual" aria-hidden="true" style={`background-image:url(${current.visual})`}></div>}
+          <div class="role-when"><span class="now">{current.period}</span><span>{current.place}</span></div>
+          <div class="role-body">
+            <span class="org">{current.org}</span>
+            <h3>{current.role}</h3>
+            <p class="context">{current.context}</p>
+            <ul>{current.highlights.map((h) => <li>{h}</li>)}</ul>
+            <div class="tags">{current.stack.map((t) => <span class="tag">{t}</span>)}</div>
+          </div>
+        </article>
+        {past.map((r) => (
+          <article class={`panel role reveal ${r.highlights.length ? '' : 'compact'} ${r.visual ? 'has-visual' : ''}`}>
+            {r.visual && <div class="role-visual" aria-hidden="true" style={`background-image:url(${r.visual})`}></div>}
+            <div class="role-when"><span>{r.period}</span><span>{r.place}</span></div>
+            <div class="role-body">
+              <span class="org">{r.org}</span>
+              <h3>{r.role}</h3>
+              <p class="context">{r.context}</p>
+              {r.highlights.length > 0 && <ul>{r.highlights.map((h) => <li>{h}</li>)}</ul>}
+              {r.stack.length > 0 && <div class="tags">{r.stack.map((t) => <span class="tag">{t}</span>)}</div>}
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
-  ))}
+  </section>
 
-  <h2>Elsewhere</h2>
-  <p>
-    Read the <a href="/blog">blog</a> or grab the <a href="/cv">CV</a>.
-  </p>
+  <section class="section" id="pulse">
+    <div class="wrap pulse-grid">
+      <div class="device reveal" data-depth="-0.03">
+        <iframe id="pulse-frame" src="/pulse/index.html" title="Pulse, live demo"></iframe>
+        <span class="bezel-label">simulated data · the real one runs on a Pi 5</span>
+      </div>
+      <div class="pulse-copy reveal">
+        <span class="eyebrow"><span class="dot"></span>Latest project · Pulse</span>
+        <h2>A brain for the home lab.</h2>
+        <p>
+          Pulse is a Raspberry Pi 5 with a 3.5″ screen on my desk. The orb breathes with the health of
+          every machine and service in the house: mint when all is well, amber when something needs me,
+          red when it's down. Load makes it restless.
+        </p>
+        <p>
+          Tap <em>Talk to Pulse</em> and a local model answers questions about the lab, with live metrics as
+          context. Nothing leaves the house.
+        </p>
+        <div class="demo-controls" role="group" aria-label="Demo controls">
+          <button class="chip bad" data-cmd="outage">Break a service</button>
+          <button class="chip" data-cmd="load">Add load</button>
+          <button class="chip" data-cmd="heal">Fix everything</button>
+          <button class="chip ai" data-cmd="talk">Talk to Pulse</button>
+        </div>
+        <ul class="spec-list">
+          <li><b>Hardware</b><span>Raspberry Pi 5, ILI9486 SPI panel at 33 MHz, touch</span></li>
+          <li><b>Data</b><span>Prometheus: node exporters + blackbox probes across the lab</span></li>
+          <li><b>AI</b><span>Streamed chat with a local model on the lab's GPU pool</span></li>
+          <li><b>Front</b><span>One HTML file, canvas particles, no framework</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="bg-photo left" data-depth="0.1" aria-hidden="true" style="background-image:url(/bg/station.webp)"></div>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Side projects</span>
+        <h2>Built on evenings, mostly to find out how something works.</h2>
+        <p>Android, XR, drones and AI tooling. Everything here is on GitHub.</p>
+      </div>
+      <div class="projects">
+        {featured.map((p, i) => (
+          <a class={`panel project reveal ${i === 0 ? 'big' : ''}`} href={gh(p.repo)}>
+            {p.image && <div class="shot">{p.video
+              ? <video src={p.video} poster={p.image} muted loop playsinline preload="none" aria-label={`${p.name} demo`}></video>
+              : <img src={p.image} alt={`${p.name} screenshot`} loading="lazy" />}</div>}
+            <div class="body">
+              <div class="meta"><span>{p.repo}</span><span>{p.year}</span></div>
+              <h3>{p.name}</h3>
+              <p>{p.blurb}</p>
+              <div class="tags">{p.tags.map((t) => <span class="tag">{t}</span>)}</div>
+            </div>
+          </a>
+        ))}
+        {more.map((p) => (
+          <a class="panel project reveal" href={gh(p.repo)}>
+            {p.image && <div class="shot">{p.video
+              ? <video src={p.video} poster={p.image} muted loop playsinline preload="none" aria-label={`${p.name} demo`}></video>
+              : <img src={p.image} alt={`${p.name} screenshot`} loading="lazy" />}</div>}
+            <div class="body">
+              <div class="meta"><span>{p.repo}</span><span>{p.year}</span></div>
+              <h3>{p.name}</h3>
+              <p>{p.blurb}</p>
+              <div class="tags">{p.tags.map((t) => <span class="tag">{t}</span>)}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div class="archive">
+        <span class="eyebrow" style="margin-bottom:.6rem">Also on GitHub</span>
+        {archive.map((p) => (
+          <a href={gh(p.repo)}><span>{p.year}</span><span>{p.name}</span><span>{p.blurb}</span></a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="skills">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Toolbox</span>
+        <h2>Whatever the program needs.</h2>
+        <p>Kotlin, Python and C/C++ in production; RF and GNSS-denied navigation learned on the job. Languages: {spoken.join(' · ')}.</p>
+      </div>
+      <div class="skills">
+        {Object.entries(skills).map(([k, v]) => (
+          <div class="panel reveal"><h3>{k}</h3><div class="tags">{v.map((t) => <span class="tag">{t}</span>)}</div></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="wrap">
+      <div class="panel contact reveal">
+        <span class="eyebrow"><span class="dot"></span>Contact</span>
+        <h2>Got a hard problem that has to work in the field?</h2>
+        <div class="cta-row">
+          {links.map((l, i) => <a class={`button ${i ? 'ghost' : ''}`} href={l.href}>{l.label}</a>)}
+          <a class="button ghost" href="/cv">Full CV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.documentElement.classList.add('js');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---- hero particle field: the Pulse orb, scaled up, with three depth layers ---- */
+    const cv = document.getElementById('field') as HTMLCanvasElement;
+    const cx = cv.getContext('2d')!;
+    let W = 0, H = 0, dpr = 1, mx = 0, my = 0, sy = 0;
+    const size = () => {
+      dpr = Math.min(devicePixelRatio || 1, 2);
+      const r = cv.getBoundingClientRect();
+      W = cv.width = r.width * dpr; H = cv.height = r.height * dpr;
+    };
+    addEventListener('resize', size); size();
+    type P = { a: number; r: number; s: number; z: number };
+    const P: P[] = Array.from({ length: innerWidth < 700 ? 260 : 520 }, () => ({ a: Math.random() * 6.283, r: Math.random(), s: 0.2 + Math.random() * 0.8, z: Math.random() }));
+    const stars = Array.from({ length: 140 }, () => ({ x: Math.random(), y: Math.random(), z: Math.random() }));
+    let t = 0;
+    const frame = () => {
+      t += 0.008;
+      cx.clearRect(0, 0, W, H);
+      const wide = W > H;
+      const X = W * (wide ? 0.72 : 0.5) + mx * 30 * dpr, Y = H * (wide ? 0.42 : 0.32) + my * 20 * dpr - sy * 0.35 * dpr;
+      const R = Math.min(W, H) * (wide ? 0.3 : 0.32) * (1 + 0.035 * Math.sin(t * 2));
+      // far layer: stars, barely move
+      cx.fillStyle = '#9fb3c8';
+      for (const s of stars) {
+        cx.globalAlpha = 0.15 + 0.35 * s.z;
+        const x = s.x * W + mx * 8 * s.z * dpr, y = ((s.y * H - sy * 0.12 * s.z * dpr) % H + H) % H;
+        cx.fillRect(x, y, dpr * (0.6 + s.z), dpr * (0.6 + s.z));
+      }
+      // glow
+      const g = cx.createRadialGradient(X, Y, 0, X, Y, R * 1.8);
+      g.addColorStop(0, 'rgba(62,240,193,0.30)'); g.addColorStop(0.45, 'rgba(62,240,193,0.07)'); g.addColorStop(1, 'transparent');
+      cx.globalAlpha = 1; cx.fillStyle = g; cx.beginPath(); cx.arc(X, Y, R * 1.8, 0, 6.283); cx.fill();
+      // particles: nearer ones (high z) shift more with the pointer = parallax inside the orb
+      for (const p of P) {
+        p.a += 0.0018 * p.s;
+        const wob = 1 + 0.12 * Math.sin(t * 3 * p.s + p.a * 4) * 0.5;
+        const rr = R * (0.35 + 0.65 * Math.sqrt(p.r)) * wob;
+        const x = X + Math.cos(p.a) * rr + mx * 26 * p.z * dpr, y = Y + Math.sin(p.a) * rr * 0.92 + my * 18 * p.z * dpr;
+        cx.globalAlpha = 0.2 + 0.8 * p.z;
+        cx.fillStyle = p.z > 0.92 ? '#9b8cff' : '#3ef0c1';
+        cx.beginPath(); cx.arc(x, y, (0.6 + p.z * 1.7) * dpr, 0, 6.283); cx.fill();
+      }
+      cx.globalAlpha = 1;
+      if (!reduce) requestAnimationFrame(frame);
+    };
+    frame();
+    addEventListener('pointermove', (e) => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
+
+    /* ---- scroll parallax: [data-depth] elements drift at their own rate ---- */
+    const layers = [...document.querySelectorAll<HTMLElement>('[data-depth]')];
+    let ticking = false;
+    const onScroll = () => {
+      sy = scrollY;
+      if (ticking || reduce) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        for (const el of layers) {
+          const d = parseFloat(el.dataset.depth || '0');
+          const r = el.getBoundingClientRect();
+          // hero layers follow page scroll; others drift around the viewport centre
+          const off = el.closest('.hero') ? -scrollY * d : (r.top + r.height / 2 - innerHeight / 2) * d;
+          el.style.transform = el.classList.contains('grid-floor')
+            ? `perspective(600px) rotateX(62deg) translateY(${(-scrollY * d).toFixed(1)}px)`
+            : `translate3d(0, ${off.toFixed(1)}px, 0)`;
+        }
+        ticking = false;
+      });
+    };
+    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+    /* ---- reveal: content is visible at rest; below-the-fold items get a gentle lift ---- */
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.remove('pending'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.reveal').forEach((el) => {
+      if (el.getBoundingClientRect().top > innerHeight) { el.classList.add('pending'); io.observe(el); }
+    });
+
+    /* ---- project clips play only while on screen, never under reduced motion ---- */
+    const vio = new IntersectionObserver((es) => es.forEach((e) => {
+      const v = e.target as HTMLVideoElement;
+      if (e.isIntersecting && !reduce) v.play().catch(() => {}); else v.pause();
+    }), { threshold: 0.4 });
+    document.querySelectorAll<HTMLVideoElement>('.project video').forEach((v) => vio.observe(v));
+
+    /* ---- Pulse demo controls talk to the iframe ---- */
+    const frameEl = document.getElementById('pulse-frame') as HTMLIFrameElement;
+    document.querySelectorAll<HTMLButtonElement>('[data-cmd]').forEach((b) =>
+      b.addEventListener('click', () => frameEl.contentWindow?.postMessage({ pulse: b.dataset.cmd }, location.origin))
+    );
+  </script>
 </BaseLayout>
