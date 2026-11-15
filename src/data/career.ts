@@ -32,7 +32,7 @@ export const roles: Role[] = [
       'Hardened the vision-tracking and guidance stack for field use: TensorRT/CUDA inference on Jetson Orin and edge AI on Raspberry Pi, hardware-rooted device identity, remote access to deployed sites.',
       'Partner programs: strike-drone integration, a higher-capacity airframe with GNSS-denied navigation, radar integration in the detection pipeline.',
       'In-house antenna project, a technician-facing production QA tool, and an LLM support agent grounded in real field incidents.',
-      '~5 months embedded on customer and government sites in Ukraine, the UAE and France.',
+      '~5 months field-deployed across international operational and maritime environments, alongside customer and government teams.',
     ],
     stack: ['Python', 'C/C++', 'Jetson Orin', 'Raspberry Pi', 'TensorRT', 'MAVLink', 'ArduPilot', 'C2 integration', 'RF'],
   },
