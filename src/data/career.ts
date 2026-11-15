@@ -130,5 +130,5 @@ export const spoken = ['French · native', 'English · fluent', 'Spanish · prof
 export const links = [
   { label: 'GitHub', href: 'https://github.com/Goudurixx' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/sylvain65' },
-  { label: 'Email', href: 'mailto:6sylvain5@gmail.com' },
+  { label: 'Email', href: 'mailto:sylvain.rousseau.apps@gmail.com' },
 ];
