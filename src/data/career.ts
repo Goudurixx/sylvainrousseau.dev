@@ -11,6 +11,7 @@ export interface Role {
   stack: string[];
   current?: boolean;
   visual?: string; // faint image on the card (official store screenshots, never internal material)
+  photo?: { src: string; caption: string }; // a real photo shown inside the card
 }
 
 export const roles: Role[] = [
@@ -102,6 +103,8 @@ export const roles: Role[] = [
     place: 'Tarbes',
     period: 'Oct 2017 – Nov 2022',
     context: 'Five years in an airborne regiment (1st Hussar Parachute Regiment).',
+    visual: '/roles/reserve-march.webp',
+    photo: { src: '/roles/reserve-line.webp', caption: 'On parade with the 1er RHP. I am in the second row; the other faces are blurred.' },
     highlights: [],
     stack: [],
   },
