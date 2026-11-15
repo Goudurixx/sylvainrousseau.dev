@@ -35,6 +35,7 @@ const years = (p: string) => p;
 
       <h2 class="cv-h">Experience</h2>
       <ol class="cv-timeline">
+        <span class="cv-orb" aria-hidden="true"></span>
         {roles.map((r) => (
           <li class={`cv-role ${r.current ? 'current' : ''}`}>
             <span class="cv-node" aria-hidden="true"></span>
@@ -96,4 +97,20 @@ const years = (p: string) => p;
       </div>
     </div>
   </section>
+  <script>
+    // a soft orb travels down the timeline with the reader, lighting the line behind it
+    const tl = document.querySelector<HTMLElement>('.cv-timeline');
+    if (tl && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let ticking = false;
+      const place = () => {
+        const r = tl.getBoundingClientRect();
+        const y = Math.min(Math.max(innerHeight * 0.45 - r.top, 0), r.height);
+        tl.style.setProperty('--orb-y', `${y}px`);
+        tl.style.setProperty('--orb-o', y > 0 && y < r.height ? '1' : '0.4');
+        ticking = false;
+      };
+      addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(place); } }, { passive: true });
+      addEventListener('resize', place); place();
+    }
+  </script>
 </BaseLayout>

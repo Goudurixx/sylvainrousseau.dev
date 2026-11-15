@@ -332,3 +332,19 @@ main.narrow h2 { font-size: 1.6rem; margin-top: 1.8rem; }
 .field-item.wide { grid-column: span 2; }
 .field-item.wide img { object-position: 50% 62%; }
 @media (max-width: 760px) { .field-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; grid-auto-rows: 12rem; } .field-item.tall { grid-row: span 2; } .field-item.wide { grid-column: span 2; } }
+
+/* scroll orb on the CV timeline */
+.cv-timeline { --orb-y: 0px; --orb-o: .4; }
+.cv-timeline::after {
+  content: ''; position: absolute; left: .45rem; top: .5rem; width: 2px; height: var(--orb-y);
+  background: linear-gradient(transparent, var(--ok)); box-shadow: 0 0 10px rgba(62,240,193,.6); border-radius: 2px; pointer-events: none;
+}
+.cv-orb {
+  position: absolute; left: calc(.45rem + 1px); top: calc(.5rem + var(--orb-y)); width: 14px; height: 14px; z-index: 2;
+  transform: translate(-50%, -50%); border-radius: 50%; opacity: var(--orb-o); transition: opacity .4s;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--ok) 45%, #0b6b55);
+  box-shadow: 0 0 14px 4px rgba(62,240,193,.55), 0 0 40px 12px rgba(62,240,193,.18);
+  animation: orb-breathe 3.2s ease-in-out infinite; pointer-events: none;
+}
+@keyframes orb-breathe { 50% { box-shadow: 0 0 10px 2px rgba(62,240,193,.45), 0 0 28px 8px rgba(62,240,193,.12); } }
+@media (prefers-reduced-motion: reduce) { .cv-orb, .cv-timeline::after { display: none; } }
