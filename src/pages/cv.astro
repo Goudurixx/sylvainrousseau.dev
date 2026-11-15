@@ -100,6 +100,7 @@ const years = (p: string) => p;
   <script>
     // a soft orb travels down the timeline with the reader, lighting the line behind it
     const tl = document.querySelector<HTMLElement>('.cv-timeline');
+    const nodes = [...document.querySelectorAll('.cv-node')];
     if (tl && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       let ticking = false;
       const place = () => {
@@ -107,6 +108,15 @@ const years = (p: string) => p;
         const y = Math.min(Math.max(innerHeight * 0.45 - r.top, 0), r.height);
         tl.style.setProperty('--orb-y', `${y}px`);
         tl.style.setProperty('--orb-o', y > 0 && y < r.height ? '1' : '0.4');
+        // swell when passing a role's node: 1 on the node, fading to 0 within 70px
+        let best = 1e9, hit: Element | null = null;
+        nodes.forEach((n) => {
+          const d = Math.abs(n.getBoundingClientRect().top + 6 - (r.top + y + 8));
+          if (d < best) { best = d; hit = n; }
+        });
+        const boost = Math.max(0, 1 - best / 70);
+        tl.style.setProperty('--orb-boost', boost.toFixed(3));
+        nodes.forEach((n) => n.classList.toggle('lit', n === hit && boost > 0.35));
         ticking = false;
       };
       addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(place); } }, { passive: true });
