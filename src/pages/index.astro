@@ -67,6 +67,7 @@ const [current, ...past] = roles;
             <ul>{current.highlights.map((h) => <li>{h}</li>)}</ul>
             <div class="tags">{current.stack.map((t) => <span class="tag">{t}</span>)}</div>
           </div>
+          {current.photo && <figure class="role-portrait"><img src={current.photo.src} alt={current.photo.alt} loading="lazy" /></figure>}
         </article>
         {past.map((r) => (
           <article class={`panel role reveal ${r.highlights.length ? '' : 'compact'} ${r.visual ? 'has-visual' : ''}`}>

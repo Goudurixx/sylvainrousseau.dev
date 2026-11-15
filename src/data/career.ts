@@ -11,7 +11,7 @@ export interface Role {
   stack: string[];
   current?: boolean;
   visual?: string; // faint image on the card (official store screenshots, never internal material)
-  photo?: { src: string; alt: string }; // a real photo shown inside the card
+  photo?: { src: string; alt: string; portrait?: boolean }; // a real photo shown inside the card
 }
 
 export const roles: Role[] = [
@@ -22,6 +22,7 @@ export const roles: Role[] = [
     period: 'Jan 2026 – now',
     current: true,
     visual: '/roles/altaares.webp',
+    photo: { src: '/roles/field-a400m.webp', alt: 'Boarding a military transport aircraft for a field deployment', portrait: true },
     context:
       'Defense-tech startup building counter-UAS interceptor drones. Tech lead on the interceptor-drone program and the Ground Control Station product.',
     highlights: [

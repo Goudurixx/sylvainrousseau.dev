@@ -269,3 +269,10 @@ main.narrow h2 { font-size: 1.6rem; margin-top: 1.8rem; }
 .prose img { max-width: 100%; border-radius: 12px; border: 1px solid var(--line); }
 .prose h2 { font-size: 1.5rem; margin-top: 1.4rem; }
 .prose ul { padding-left: 1.2rem; display: grid; gap: .4rem; }
+
+/* field portrait on the current role: third column on wide screens */
+.role.current { grid-template-columns: 11rem 1fr 15rem; }
+.role-portrait { margin: 0; align-self: start; }
+.role-portrait img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 30%; border-radius: 14px; border: 1px solid var(--line-strong); display: block; }
+@media (max-width: 1000px) { .role.current { grid-template-columns: 11rem 1fr; } .role-portrait { grid-column: 2; max-width: 16rem; } }
+@media (max-width: 720px) { .role.current { grid-template-columns: 1fr; } .role-portrait { grid-column: auto; } }
