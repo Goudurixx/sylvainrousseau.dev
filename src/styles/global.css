@@ -370,3 +370,17 @@ button.cv-node:hover { border-color: var(--ok); }
 /* on a role's point the orb blinks steadily, like a REC light */
 .cv-orb.rec { animation: rec-blink 1.1s steps(1, end) infinite; }
 @keyframes rec-blink { 0% { opacity: 1; } 55% { opacity: .25; } }
+
+/* background photos breathe slowly instead of sitting still (scale/opacity, so parallax transforms keep working) */
+@keyframes bg-breathe {
+  0%, 100% { opacity: var(--bg-o, .11); scale: 1; }
+  50% { opacity: calc(var(--bg-o, .11) * 1.6); scale: 1.045; }
+}
+.bg-photo { animation: bg-breathe 11s ease-in-out infinite; }
+#projects .bg-photo { animation-delay: -3s; }
+#pulse .bg-photo { animation-delay: -5.5s; }
+#skills .bg-photo { animation-delay: -8s; }
+#contact .bg-photo { animation-delay: -2s; }
+.hero-photo { --bg-o: .22; animation: bg-breathe 13s ease-in-out infinite; }
+@media (max-width: 720px) { .bg-photo { --bg-o: .08; } .hero-photo { --bg-o: .14; } }
+@media (prefers-reduced-motion: reduce) { .bg-photo, .hero-photo { animation: none; } }
